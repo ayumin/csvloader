@@ -1,7 +1,7 @@
 class CreateDetailSchedules < ActiveRecord::Migration
   def self.up
     create_table :detail_schedules do |t|
-      t.date :export_at
+      t.datetime :export_at
       t.date :minashi_date
       t.string :stage_name
       t.date :stage_start_date
