@@ -1,6 +1,19 @@
 # -*- encoding: utf8 -*-
 require 'fastercsv'
 module Loader
+  def execute(args)
+    init
+    import(args)
+    params = normalize
+    begin
+      ActiveRecord::Base.transaction do
+        insert(params)
+      end
+    rescue
+    end
+  end
+  def inint(opts = {})
+  end
   def import(path)
     @header = []
     @data = []
@@ -14,6 +27,17 @@ module Loader
       @data << row_hash
     end
     @data
+  end
+  def normalize
+    {self.class.to_s.sub(/Loader$/,'') => @data}
+  end
+  def insert(params)
+    params.each_keys do |key|
+      table = key.constantize
+      create(params[key]).each do |row|
+        table.create(row)
+      end
+    end
   end
   private
   def convert(val,key)
