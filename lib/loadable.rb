@@ -2,14 +2,12 @@
 module Loadable
   def execute(ary)
     recordset = normalize(import(ary))
-    ActiveRecord::Base.transaction do
-      recordset.each_pair do |k,v|
-        v.each {|record| k.constantize.create(record)}
-      end
-    end
+#     ActiveRecord::Base.transaction do
+#       recordset.each_pair do |k,v|
+#         v.each {|record| k.constantize.create(record)}
+#       end
+#     end
   end
-  private
-  #= import(ary) -> array 
   # CSVからインポートしたデータを加工してHashの配列にして返す。
   def import(ary)
     row_header = nil
@@ -25,14 +23,13 @@ module Loadable
     end
     row_data
   end
-  #= normalize(data = []) -> hash
   # importで加工されたHash配列を正規化する。
   # サブクラスでオーバーライドされない場合はサブクラスのクラス名
   # からデータ投入先のテーブル名を推測する。
   def normalize(data = [])
     {self.class.to_s.sub(/Loader$/,'') => data}
   end
-  #= convert(val,key) -> obj
+  private
   # CSVヘッダの命名規約にしたがってカラムの値を変換して返す
   def convert(val,key)
     key.to_s =~ /_[a-zA-Z]+?$/
