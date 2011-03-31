@@ -1,4 +1,3 @@
 # -*- encoding: utf8 -*-
-class DetailScheduleLoader
-  include Loader
+class DetailScheduleLoader < CSVLoader
 end
