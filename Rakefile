@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-Yamane::Application.load_tasks
+Msipmo::Application.load_tasks
