@@ -1,47 +1,42 @@
 # -*- encoding: utf8 -*-
 module Loadable
-  def execute(args)
-    init
-    import(args)
-    params = normalize
-    begin
-      ActiveRecord::Base.transaction do
-        insert(params)
+  def execute(ary)
+    recordset = normalize(import(ary))
+    ActiveRecord::Base.transaction do
+      recordset.each_pair do |k,v|
+        v.each {|record| k.constantize.create}
       end
-    rescue
     end
   end
-  def inint(opts = {})
-  end
-  def import(str)
+  private
+  #= import(ary) -> array 
+  # CSVからインポートしたデータを加工してHashの配列にして返す。
+  def import(ary)
+    row_header = nil
     row_data = []
-    str.each_line.with_index do |row,row_index|
-      row_header || = row.map(&:to_sym)
+    ary.each_with_index do |row,row_index|
+      row_header ||= row.map(&:to_sym)
       next if row_index == 0 or row.join.length == 0
       row_hash = {}
       row.each_with_index do |col,col_index|
-        row_hash.merge({ row_header[col_index] => (col ? convert(col,row_header[col_index]) : nil)})
+        row_hash[row_header[col_index]] = col ? convert(col,row_header[col_index]) : nil
       end
       row_data << row_hash
     end
     row_data
   end
+  #= normalize(data = []) -> hash
+  # importで加工されたHash配列を正規化する。
+  # サブクラスでオーバーライドされない場合はサブクラスのクラス名
+  # からデータ投入先のテーブル名を推測する。
   def normalize(data = [])
     {self.class.to_s.sub(/Loader$/,'') => data}
   end
-  def insert(params)
-    params.each_keys do |key|
-      table = key.constantize
-      create(params[key]).each do |row|
-        table.create(row)
-      end
-    end
-  end
-  private
+  #= convert(val,key) -> obj
+  # CSVヘッダの命名規約にしたがってカラムの値を変換して返す
   def convert(val,key)
-    return {key => val} unless val
     key.to_s =~ /_[a-zA-Z]+?$/
-    converted_val = case $&
+    case $&
     when '_date'
       (month,day,year) = val.split('/').map(&:to_i)
       Date.new(year,month,day)
@@ -55,6 +50,5 @@ module Loadable
     else
       val
     end
-    {key => converted_val}
   end
 end
