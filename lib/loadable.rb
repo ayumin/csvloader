@@ -4,7 +4,7 @@ module Loadable
     recordset = normalize(import(ary))
     ActiveRecord::Base.transaction do
       recordset.each_pair do |k,v|
-        v.each {|record| k.constantize.create}
+        v.each {|record| k.constantize.create(record)}
       end
     end
   end
