@@ -16,7 +16,7 @@ describe DetailScheduleLoader do
           @result = DetailScheduleLoader.load([["a","b","c"],["1","2","3"],["","",""],["4","5","6"]])
         end
         subject { @result }
-        it { should == { "DetailSchedule" => [{:a => "1",:b => "2", :c => "3"},{:a => "4",:b => "5",:c => "6"}]} }
+        it { subject["DetailSchedule"].should == [{:a => "1",:b => "2", :c => "3"},{:a => "4",:b => "5",:c => "6"}] }
       end
       context 'normalizeをオーバーライドしたとき' do
         before do
@@ -28,7 +28,7 @@ describe DetailScheduleLoader do
           @result = DetailScheduleLoader.load([["a","b","c"],["1","2","3"],["","",""],["4","5","6"]])
         end
         subject { @result }
-        it { should == { "Hoge" => [{:a => "1",:b => "2", :c => "3"},{:a => "4",:b => "5",:c => "6"}]} }
+        it { subject["Hoge"].should == [{:a => "1",:b => "2", :c => "3"},{:a => "4",:b => "5",:c => "6"}] }
       end
       context 'テーブル分割をしたとき' do
         before do

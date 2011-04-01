@@ -9,7 +9,7 @@ class CSVLoader
       self.new.execute(ary)
     end
     def load_file(path)
-      load(FasterCSV.read(path))
+      load(FasterCSV.parse(File.read(path)))
     end
   end
 end

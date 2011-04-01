@@ -1,12 +1,7 @@
 # -*- encoding: utf8 -*-
 module Loadable
   def execute(ary)
-    recordset = normalize(import(ary))
-#     ActiveRecord::Base.transaction do
-#       recordset.each_pair do |k,v|
-#         v.each {|record| k.constantize.create(record)}
-#       end
-#     end
+    @recordset = normalize(import(ary))
   end
   # CSVからインポートしたデータを加工してHashの配列にして返す。
   def import(ary)
@@ -28,6 +23,13 @@ module Loadable
   # からデータ投入先のテーブル名を推測する。
   def normalize(data = [])
     {self.class.to_s.sub(/Loader$/,'') => data}
+  end
+  def insert
+    ActiveRecord::Base.transaction do
+      @recordset.each_pair do |k,v|
+        v.each {|record| k.constantize.create(record)}
+      end
+    end
   end
   private
   # CSVヘッダの命名規約にしたがってカラムの値を変換して返す
