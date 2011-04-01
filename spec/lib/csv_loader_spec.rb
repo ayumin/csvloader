@@ -16,7 +16,7 @@ describe CSVLoader do
           @result = CSVLoader.load([["a","b","c"],["1","2","3"],["","",""],["4","5","6"]])
         end
         subject { @result }
-        it { should == { "CSV" => [{:a => "1",:b => "2", :c => "3"},{:a => "4", :b => "5", :c => "6"}]} }
+        it { subject["CSV"].should == [{:a => "1",:b => "2", :c => "3"},{:a => "4", :b => "5", :c => "6"}] }
       end
       context '文字列が渡されたとき' do
         before do
@@ -27,7 +27,7 @@ a,b,c
 _CSV_
         end
         subject { @result }
-        it { should == { "CSV" => [{:a => "1",:b => "2", :c => "3"},{:a => "4", :b => "5", :c => "6"}]} }
+        it { subject["CSV"].should == [{:a => "1",:b => "2", :c => "3"},{:a => "4", :b => "5", :c => "6"}] }
       end
     end
 
