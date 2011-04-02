@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'fastercsv'
+require 'kconv'
 class CSVLoader
   include Loadable
   class << self
@@ -9,6 +10,8 @@ class CSVLoader
       self.new.execute(ary)
     end
     def load_file(path)
+      str = File.read(path)
+      str = str.toutf8 unless Kconv.guess(str) == Kconv::UTF8
       load(FasterCSV.parse(File.read(path)))
     end
   end
