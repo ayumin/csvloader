@@ -34,4 +34,5 @@ group :development, :test do
   gem 'rspec-instafail'
   gem 'rspec-rails', '>=2.0.3'
   gem 'guard-rspec'
+  gem 'rcov'
 end
