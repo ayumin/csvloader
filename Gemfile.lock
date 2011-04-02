@@ -35,7 +35,6 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastercsv (1.5.4)
-    growl (1.0.3)
     guard (0.3.0)
       open_gem (~> 1.4.2)
       thor (~> 0.14.6)
@@ -92,14 +91,13 @@ GEM
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
-    tzinfo (0.3.25)
+    tzinfo (0.3.26)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   fastercsv
-  growl
   guard-rspec
   mysql2
   rails (= 3.0.5)

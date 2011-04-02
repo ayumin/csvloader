@@ -29,7 +29,7 @@ gem 'fastercsv'
 # and rake tasks are available in development mode:
 group :development, :test do
 #   gem 'webrat'
-  gem 'growl'
+  gem 'growl' if `uname` =~ /Darwin/
   gem 'rspec'
   gem 'rspec-instafail'
   gem 'rspec-rails', '>=2.0.3'
