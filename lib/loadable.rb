@@ -1,8 +1,9 @@
-# -*- encoding: utf8 -*-
+# -*- encoding: utf-8 -*-
 module Loadable
   def execute(ary)
     @row_data = import(ary)
     @recordset = normalize
+    insert
   end
   # CSVからインポートしたデータを加工してHashの配列にして返す。
   def import(ary)
@@ -28,9 +29,17 @@ module Loadable
   def insert
     ActiveRecord::Base.transaction do
       @recordset.each_pair do |k,v|
-        v.each {|record| k.constantize.create(record)}
+        v.each do |record|
+          table = k.tableize
+          columns = record.keys.map(&:to_s).join(',')
+          values = record.values.map(&:inspect).join(',')
+          puts "[query] INSERT INTO #{table} (#{columns}) VALUES (#{values})" if ENV['opt_verbose']
+          k.constantize.create(record)
+        end
       end
     end
+  rescue Error => e
+    p e
   end
   private
   # CSVヘッダの命名規約にしたがってカラムの値を変換して返す
