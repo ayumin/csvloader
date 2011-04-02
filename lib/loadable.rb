@@ -1,7 +1,8 @@
 # -*- encoding: utf8 -*-
 module Loadable
   def execute(ary)
-    @recordset = normalize(import(ary))
+    @row_data = import(ary)
+    @recordset = normalize
   end
   # CSVからインポートしたデータを加工してHashの配列にして返す。
   def import(ary)
@@ -21,8 +22,8 @@ module Loadable
   # importで加工されたHash配列を正規化する。
   # サブクラスでオーバーライドされない場合はサブクラスのクラス名
   # からデータ投入先のテーブル名を推測する。
-  def normalize(data = [])
-    {self.class.to_s.sub(/Loader$/,'') => data}
+  def normalize
+    {self.class.to_s.sub(/Loader$/,'') => @row_data}
   end
   def insert
     ActiveRecord::Base.transaction do
@@ -44,7 +45,7 @@ module Loadable
       DateTime.new(year,month,day,hour,min,sec)
     when '_md','_rate','_f'
       val.to_f
-    when '_id','_no','_num','_days'
+    when '_id','_no','_num','_days','_i'
       val.to_i
     else
       val
