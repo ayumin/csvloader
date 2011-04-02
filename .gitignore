@@ -1,5 +1,6 @@
 .bundle
 .DS_Store
+.redcar
 config/database.yml
 db/*.sqlite3
 vendor/bundle
