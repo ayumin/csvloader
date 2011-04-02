@@ -12,9 +12,17 @@ done
 
 shift $(( $OPTIND - 1 ))
 
+if [ -z $@ ]; then
+  OPT_ERROR=1
+fi
+
+if [ ! -f $@ ]; then
+  OPT_ERROR=1
+fi
+
 if [ $OPT_ERROR ]; then
   echo >&2 "usage: $0 [-v] file.cvs"
   exit 1
 fi
 
-bundle exec rails runner -e $RAILS_ENV $LOADER_CLASS.load_file\(\'$@\'\)
+. bundle exec rails runner -e $RAILS_ENV $LOADER_CLASS.load_file\(\'$@\'\)
